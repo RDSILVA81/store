@@ -1,14 +1,16 @@
 package com.company.store.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.ToString;
+import lombok.Getter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "store")
+@Getter
 public class StoreEntity {
 
     @Id
@@ -19,8 +21,12 @@ public class StoreEntity {
     @Column(name = "store_name")
     private String storeName;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id",nullable = false)
-    @JsonManagedReference
-    private Set<ProductEntity> products;
+    @ManyToMany
+    @JoinTable(
+            name = "store_products",
+            joinColumns = @JoinColumn(name = "store_id"),
+            inverseJoinColumns = @JoinColumn(name = "products_id"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private List<ProductEntity> products;
 }

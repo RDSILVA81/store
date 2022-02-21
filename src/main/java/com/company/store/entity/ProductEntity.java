@@ -1,15 +1,14 @@
 package com.company.store.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.ToString;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "product")
+@Getter
 public class ProductEntity {
 
     @Id
@@ -23,8 +22,11 @@ public class ProductEntity {
     @Column(name = "price")
     private Double price;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id")
-    @JsonBackReference
+    @ManyToMany
+    @JoinTable(
+            name = "store_products",
+            joinColumns = @JoinColumn(name = "products_id"),
+            inverseJoinColumns = @JoinColumn(name = "store_id"))
+    @JsonIgnore
     private Set<StoreEntity> store;
 }

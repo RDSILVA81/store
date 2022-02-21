@@ -6,7 +6,6 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none
-
   datasource:
     hikari:
       connectionTimeout: 20000
