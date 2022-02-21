@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  store:
+    image: 'postgres:13.1-alpine'
+    container_name: storeDB
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=store
+      - POSTGRES_PASSWORD=123456
+  flyway:
+    image: flyway/flyway:8.5.0
+    command: -url=jdbc:postgresql://store:5432/store -user=store -password=123456 -connectRetries=10 migrate info
+    volumes:
+      - ./src/main/resources/flyway/sql:/flyway/sql
+    depends_on:
+      - store
+    links:
+      - store
+  store-server:
+      container_name: store-server
+      build:
+        dockerfile: Dockerfile
+      image: store-server:latest
+      ports:
+        - 8080:8080
+      depends_on:
+        - store
+      environment:
+          - SPRING_DATASOURCE_URL=jdbc:postgresql://storeDB:5432/store
+          - SPRING_DATASOURCE_USERNAME=store
+          - SPRING_DATASOURCE_PASSWORD=123456
+          - SPRING_JPA_HIBERNATE_DDL_AUTO=update
