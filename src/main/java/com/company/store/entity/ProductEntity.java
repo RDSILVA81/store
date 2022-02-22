@@ -2,6 +2,7 @@ package com.company.store.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -9,6 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "product")
 @Getter
+@Setter
 public class ProductEntity {
 
     @Id
